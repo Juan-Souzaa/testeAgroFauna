@@ -2,14 +2,14 @@
 
 namespace App\Http\Requests;
 
-use App\Models\Livro;
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Validation\Rule;
 
-class StoreLivroRequest extends FormRequest
+class UpdateLivroRequest extends FormRequest
 {
     public function authorize(): bool
     {
-        return $this->user()->can('create', Livro::class);
+        return $this->user()->can('update', $this->route('livro'));
     }
 
     protected function prepareForValidation(): void
@@ -21,10 +21,12 @@ class StoreLivroRequest extends FormRequest
 
     public function rules(): array
     {
+        $livro = $this->route('livro');
+
         return [
             'titulo' => ['required', 'string', 'max:255'],
             'autor' => ['required', 'string', 'max:255'],
-            'isbn' => ['required', 'string', 'max:32', 'unique:livros,isbn'],
+            'isbn' => ['required', 'string', 'max:32', Rule::unique('livros', 'isbn')->ignore($livro->id)],
             'preco' => ['required', 'numeric', 'min:0'],
             'categoria_id' => ['required', 'exists:categorias,id'],
             'publicado_em' => ['nullable', 'date'],
