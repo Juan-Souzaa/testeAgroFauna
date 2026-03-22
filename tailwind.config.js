@@ -13,7 +13,31 @@ export default {
     theme: {
         extend: {
             fontFamily: {
-                sans: ['Figtree', ...defaultTheme.fontFamily.sans],
+                sans: ['Inter', ...defaultTheme.fontFamily.sans],
+                headline: ['Manrope', ...defaultTheme.fontFamily.sans],
+            },
+            colors: {
+                folio: {
+                    primary: '#00236f',
+                    'primary-container': '#1e3a8a',
+                    'primary-fixed': '#dce1ff',
+                    surface: '#f7f9fb',
+                    'surface-low': '#f2f4f6',
+                    'surface-high': '#e6e8ea',
+                    'surface-highest': '#e0e3e5',
+                    'surface-bright': '#f7f9fb',
+                    'on-surface': '#191c1e',
+                    'on-surface-variant': '#444651',
+                    secondary: '#515f74',
+                    'secondary-container': '#d5e3fc',
+                    'on-secondary-container': '#57657a',
+                    outline: '#757682',
+                    'outline-variant': '#c5c5d3',
+                    'on-primary': '#ffffff',
+                },
+            },
+            boxShadow: {
+                folio: '0 10px 40px -10px rgba(25, 28, 30, 0.08)',
             },
         },
     },
