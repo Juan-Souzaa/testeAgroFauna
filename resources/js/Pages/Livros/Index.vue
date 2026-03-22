@@ -1,7 +1,9 @@
 <script setup>
+import ConfirmDeleteModal from '@/Components/ConfirmDeleteModal.vue';
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout.vue';
+import { formatarData, formatarPreco } from '@/utils/format';
 import { Head, Link, router, usePage } from '@inertiajs/vue3';
-import { computed } from 'vue';
+import { computed, ref } from 'vue';
 
 const page = usePage();
 
@@ -37,35 +39,41 @@ const podeExcluir = computed(() =>
     (page.props.permissions ?? []).includes('books.delete'),
 );
 
-function formatarPreco(valor) {
-    if (valor === null || valor === undefined) {
-        return '—';
-    }
-    const n = Number(valor);
-    return new Intl.NumberFormat('pt-BR', {
-        style: 'currency',
-        currency: 'BRL',
-    }).format(n);
-}
-
-function formatarData(valor) {
-    if (valor === null || valor === undefined || valor === '') {
-        return '—';
-    }
-    const d = new Date(valor);
-    if (Number.isNaN(d.getTime())) {
-        return '—';
-    }
-    return d.toLocaleDateString('pt-BR', {
-        day: '2-digit',
-        month: 'short',
-        year: 'numeric',
-    });
-}
-
 function iniciais(titulo) {
     const t = (titulo || '?').trim();
     return t.slice(0, 1).toUpperCase();
+}
+
+const modalExcluirAberto = ref(false);
+const livroParaExcluir = ref(null);
+const aExcluir = ref(false);
+
+function abrirModalExcluir(livro) {
+    livroParaExcluir.value = livro;
+    modalExcluirAberto.value = true;
+}
+
+function fecharModalExcluir() {
+    if (aExcluir.value) {
+        return;
+    }
+    modalExcluirAberto.value = false;
+    livroParaExcluir.value = null;
+}
+
+function executarExclusao() {
+    if (!livroParaExcluir.value) {
+        return;
+    }
+    aExcluir.value = true;
+    router.delete(route('livros.destroy', livroParaExcluir.value.id), {
+        preserveScroll: true,
+        onFinish: () => {
+            aExcluir.value = false;
+            modalExcluirAberto.value = false;
+            livroParaExcluir.value = null;
+        },
+    });
 }
 
 function chipCategoria(livro) {
@@ -270,22 +278,33 @@ const intervaloLista = computed(() => {
                                     <div
                                         class="flex justify-end gap-1 sm:gap-2"
                                     >
-                                        <button
-                                            type="button"
-                                            class="rounded-lg p-2 text-folio-secondary transition-all hover:bg-folio-primary-fixed hover:text-folio-primary disabled:cursor-not-allowed disabled:opacity-40"
-                                            :disabled="!podeEditar"
+                                        <Link
+                                            v-if="podeEditar"
+                                            :href="route('livros.edit', livro.id)"
+                                            class="rounded-lg p-2 text-folio-secondary transition-all hover:bg-folio-primary-fixed hover:text-folio-primary"
                                             aria-label="Editar livro"
                                         >
                                             <span
                                                 class="material-symbols-outlined text-[20px]"
                                                 >edit</span
                                             >
-                                        </button>
+                                        </Link>
+                                        <span
+                                            v-else
+                                            class="inline-flex rounded-lg p-2 opacity-40"
+                                            aria-hidden="true"
+                                        >
+                                            <span
+                                                class="material-symbols-outlined text-[20px] text-folio-secondary"
+                                                >edit</span
+                                            >
+                                        </span>
                                         <button
                                             type="button"
                                             class="rounded-lg p-2 text-folio-secondary transition-all hover:bg-folio-error-container hover:text-folio-error disabled:cursor-not-allowed disabled:opacity-40"
                                             :disabled="!podeExcluir"
                                             aria-label="Excluir livro"
+                                            @click="abrirModalExcluir(livro)"
                                         >
                                             <span
                                                 class="material-symbols-outlined text-[20px]"
@@ -368,5 +387,13 @@ const intervaloLista = computed(() => {
                 >add</span
             >
         </Link>
+
+        <ConfirmDeleteModal
+            :show="modalExcluirAberto"
+            :titulo-obra="livroParaExcluir?.titulo ?? ''"
+            :processing="aExcluir"
+            @close="fecharModalExcluir"
+            @confirm="executarExclusao"
+        />
     </AuthenticatedLayout>
 </template>

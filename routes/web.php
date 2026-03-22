@@ -21,6 +21,15 @@ Route::middleware('auth')->group(function () {
         Route::get('/livros/criar', [LivroController::class, 'create'])->name('livros.create');
         Route::post('/livros', [LivroController::class, 'store'])->name('livros.store');
     });
+
+    Route::middleware('permission:books.update')->group(function () {
+        Route::get('/livros/{livro}/editar', [LivroController::class, 'edit'])->name('livros.edit');
+        Route::put('/livros/{livro}', [LivroController::class, 'update'])->name('livros.update');
+    });
+
+    Route::middleware('permission:books.delete')->group(function () {
+        Route::delete('/livros/{livro}', [LivroController::class, 'destroy'])->name('livros.destroy');
+    });
 });
 
 require __DIR__.'/auth.php';

@@ -20,4 +20,16 @@ class LivroService
     {
         return Livro::create($data);
     }
+
+    public function atualizar(Livro $livro, array $data): Livro
+    {
+        $livro->update($data);
+
+        return $livro->fresh();
+    }
+
+    public function apagar(Livro $livro): void
+    {
+        $livro->delete();
+    }
 }
