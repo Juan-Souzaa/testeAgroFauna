@@ -3,12 +3,19 @@
 namespace App\Services;
 
 use App\Models\Livro;
+use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 
 class LivroService
 {
-    /**
-     * @param  array<string, mixed>  $data
-     */
+    public function listarPaginado(int $porPagina): LengthAwarePaginator
+    {
+        return Livro::query()
+            ->with('categoria:id,nome')
+            ->orderByDesc('id')
+            ->paginate($porPagina)
+            ->withQueryString();
+    }
+
     public function criar(array $data): Livro
     {
         return Livro::create($data);
