@@ -5,8 +5,10 @@ namespace App\Http\Controllers;
 use App\Http\Requests\ListarLivrosRequest;
 use App\Http\Requests\StoreLivroRequest;
 use App\Http\Requests\UpdateLivroRequest;
+use App\Models\AuditLog;
 use App\Models\Categoria;
 use App\Models\Livro;
+use App\Services\AuditLogService;
 use App\Services\LivroService;
 use Inertia\Inertia;
 use Inertia\Response;
@@ -30,9 +32,16 @@ class LivroController extends Controller
         ]);
     }
 
-    public function store(StoreLivroRequest $request, LivroService $livros)
+    public function store(StoreLivroRequest $request, LivroService $livros, AuditLogService $auditLog)
     {
-        $livros->criar($request->validated());
+        $livro = $livros->criar($request->validated());
+
+        $auditLog->registrar(
+            $request->user(),
+            AuditLog::LIVRO_CREATED,
+            $livro,
+            $livro->titulo,
+        );
 
         return redirect()
             ->route('livros.index')
@@ -49,18 +58,32 @@ class LivroController extends Controller
         ]);
     }
 
-    public function update(UpdateLivroRequest $request, Livro $livro, LivroService $livros)
+    public function update(UpdateLivroRequest $request, Livro $livro, LivroService $livros, AuditLogService $auditLog)
     {
-        $livros->atualizar($livro, $request->validated());
+        $livro = $livros->atualizar($livro, $request->validated());
+
+        $auditLog->registrar(
+            $request->user(),
+            AuditLog::LIVRO_UPDATED,
+            $livro,
+            $livro->titulo,
+        );
 
         return redirect()
             ->route('livros.index')
             ->with('success', 'Livro atualizado com sucesso.');
     }
 
-    public function destroy(Livro $livro, LivroService $livros)
+    public function destroy(Livro $livro, LivroService $livros, AuditLogService $auditLog)
     {
         $this->authorize('delete', $livro);
+
+        $auditLog->registrar(
+            request()->user(),
+            AuditLog::LIVRO_DELETED,
+            $livro,
+            $livro->titulo,
+        );
 
         $livros->apagar($livro);
 
