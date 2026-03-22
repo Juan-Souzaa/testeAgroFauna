@@ -1,12 +1,24 @@
 <script setup>
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout.vue';
 import CriarEditorModal from '@/Components/Admin/CriarEditorModal.vue';
+import ExcluirUsuarioModal from '@/Components/Admin/ExcluirUsuarioModal.vue';
 import { Head, Link, router, usePage } from '@inertiajs/vue3';
-import { computed, ref } from 'vue';
+import { computed, ref, watch } from 'vue';
 
 const page = usePage();
 
 const modalCriarAberto = ref(false);
+const modalExcluirAberto = ref(false);
+const usuarioParaExcluir = ref(null);
+const excluindoUsuario = ref(false);
+
+const idUsuarioAutenticado = computed(() => page.props.auth?.user?.id ?? null);
+
+watch(modalExcluirAberto, (aberto) => {
+    if (!aberto) {
+        usuarioParaExcluir.value = null;
+    }
+});
 
 const props = defineProps({
     usuarios: {
@@ -37,6 +49,44 @@ function aoMudarPapel(user, event) {
         { role },
         { preserveScroll: true },
     );
+}
+
+function podeExcluirUsuario(u) {
+    if (idUsuarioAutenticado.value === null || u.id === idUsuarioAutenticado.value) {
+        return false;
+    }
+    if (
+        props.estatisticas.admins <= 1 &&
+        papelAtual(u) === 'admin'
+    ) {
+        return false;
+    }
+    return true;
+}
+
+function abrirExcluirUsuario(u) {
+    if (!podeExcluirUsuario(u)) {
+        return;
+    }
+    usuarioParaExcluir.value = u;
+    modalExcluirAberto.value = true;
+}
+
+function confirmarExclusaoUsuario() {
+    const u = usuarioParaExcluir.value;
+    if (!u) {
+        return;
+    }
+    excluindoUsuario.value = true;
+    router.delete(route('admin.users.destroy', u.id), {
+        preserveScroll: true,
+        onFinish: () => {
+            excluindoUsuario.value = false;
+        },
+        onSuccess: () => {
+            modalExcluirAberto.value = false;
+        },
+    });
 }
 
 function iniciais(nome) {
@@ -83,6 +133,12 @@ const intervaloLista = computed(() => {
                 </p>
             </div>
 
+            <div v-if="$page.props.errors?.user" class="mb-6 rounded-xl border border-red-200 bg-red-50 px-4 py-3 text-sm font-medium text-red-800">
+                <p class="font-medium text-red-800">
+                    {{ $page.props.errors.user }}
+                </p>
+            </div>
+
             <!-- Hero (Stitch: Controle de Acesso) -->
             <div
                 class="mb-10 flex flex-col gap-6 sm:mb-12 sm:flex-row sm:items-end sm:justify-between"
@@ -117,6 +173,13 @@ const intervaloLista = computed(() => {
             </div>
 
             <CriarEditorModal v-model:show="modalCriarAberto" />
+
+            <ExcluirUsuarioModal
+                v-model:show="modalExcluirAberto"
+                :nome-usuario="usuarioParaExcluir?.name ?? ''"
+                :processing="excluindoUsuario"
+                @confirm="confirmarExclusaoUsuario"
+            />
 
             <!-- Cards estilo Stitch / bento -->
             <div class="mb-10 grid grid-cols-1 gap-6 sm:mb-12 md:grid-cols-3">
@@ -256,6 +319,11 @@ const intervaloLista = computed(() => {
                                 >
                                     Estado
                                 </th>
+                                <th
+                                    class="px-6 py-4 text-right font-headline text-[11px] font-bold uppercase tracking-widest text-folio-outline"
+                                >
+                                    Ações
+                                </th>
                             </tr>
                         </thead>
                         <tbody>
@@ -308,6 +376,27 @@ const intervaloLista = computed(() => {
                                             >Ativo</span
                                         >
                                     </div>
+                                </td>
+                                <td class="px-6 py-5 text-right">
+                                    <button
+                                        type="button"
+                                        class="inline-flex items-center justify-center rounded-lg p-2 text-folio-outline transition-colors hover:bg-red-50 hover:text-red-700 disabled:cursor-not-allowed disabled:opacity-40"
+                                        :disabled="!podeExcluirUsuario(u)"
+                                        :title="
+                                            !podeExcluirUsuario(u)
+                                                ? u.id === idUsuarioAutenticado
+                                                    ? 'Você não pode excluir a própria conta aqui.'
+                                                    : 'Não é possível excluir o único administrador.'
+                                                : 'Excluir usuário'
+                                        "
+                                        @click="abrirExcluirUsuario(u)"
+                                    >
+                                        <span
+                                            class="material-symbols-outlined text-[22px]"
+                                            aria-hidden="true"
+                                            >delete</span
+                                        >
+                                    </button>
                                 </td>
                             </tr>
                         </tbody>
