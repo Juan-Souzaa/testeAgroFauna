@@ -3,7 +3,7 @@ import ConfirmDeleteModal from '@/Components/ConfirmDeleteModal.vue';
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout.vue';
 import { formatarData, formatarPreco } from '@/utils/format';
 import { Head, Link, router, usePage } from '@inertiajs/vue3';
-import { computed, ref } from 'vue';
+import { computed, ref, watch } from 'vue';
 
 const page = usePage();
 
@@ -48,9 +48,24 @@ const modalExcluirAberto = ref(false);
 const livroParaExcluir = ref(null);
 const aExcluir = ref(false);
 
+
+const livroExpandidoId = ref(null);
+
+function alternarExpansaoLivro(id) {
+    livroExpandidoId.value = livroExpandidoId.value === id ? null : id;
+}
+
+watch(
+    () => props.livros.data.map((l) => l.id).join(','),
+    () => {
+        livroExpandidoId.value = null;
+    },
+);
+
 function abrirModalExcluir(livro) {
     livroParaExcluir.value = livro;
     modalExcluirAberto.value = true;
+    livroExpandidoId.value = null;
 }
 
 function fecharModalExcluir() {
@@ -187,7 +202,133 @@ const intervaloLista = computed(() => {
                     Ainda não há livros cadastrados.
                 </p>
 
-                <div v-else class="overflow-x-auto">
+                <div
+                    v-else
+                    class="divide-y divide-folio-outline-variant/10 md:hidden"
+                >
+                    <div
+                        v-for="livro in livros.data"
+                        :key="`m-${livro.id}`"
+                    >
+                        <button
+                            type="button"
+                            class="flex w-full items-center gap-3 px-4 py-4 text-left transition-colors hover:bg-folio-surface-low/60 active:bg-folio-surface-low"
+                            :aria-expanded="livroExpandidoId === livro.id"
+                            :aria-controls="`livro-detalhe-${livro.id}`"
+                            @click="alternarExpansaoLivro(livro.id)"
+                        >
+                            <div
+                                class="flex h-12 w-9 shrink-0 items-center justify-center rounded bg-gradient-to-br from-folio-primary-container to-folio-secondary text-xs font-bold text-white shadow-sm"
+                                aria-hidden="true"
+                            >
+                                {{ iniciais(livro.titulo) }}
+                            </div>
+                            <div class="min-w-0 flex-1">
+                                <p
+                                    class="font-headline font-bold leading-snug text-folio-on-surface line-clamp-2"
+                                >
+                                    {{ livro.titulo }}
+                                </p>
+                                <p class="mt-0.5 truncate text-sm text-folio-secondary">
+                                    {{ livro.autor }}
+                                </p>
+                                <p class="mt-1 text-sm font-bold tabular-nums text-folio-on-surface">
+                                    {{ formatarPreco(livro.preco) }}
+                                </p>
+                            </div>
+                            <span
+                                class="material-symbols-outlined shrink-0 text-folio-outline transition-transform duration-200"
+                                :class="
+                                    livroExpandidoId === livro.id
+                                        ? 'rotate-90'
+                                        : ''
+                                "
+                                aria-hidden="true"
+                                >chevron_right</span
+                            >
+                        </button>
+                        <Transition
+                            enter-active-class="transition duration-200 ease-out"
+                            enter-from-class="-translate-y-1 opacity-0"
+                            enter-to-class="translate-y-0 opacity-100"
+                            leave-active-class="transition duration-150 ease-in"
+                            leave-from-class="translate-y-0 opacity-100"
+                            leave-to-class="-translate-y-1 opacity-0"
+                        >
+                            <div
+                                v-show="livroExpandidoId === livro.id"
+                                :id="`livro-detalhe-${livro.id}`"
+                                class="border-t border-folio-outline-variant/10 bg-folio-surface-low/60 px-4 pb-4"
+                            >
+                                <div
+                                    class="max-h-[min(70vh,24rem)] space-y-3 overflow-y-auto pt-3 text-sm"
+                                >
+                                    <dl class="space-y-3">
+                                        <div>
+                                            <dt
+                                                class="text-xs font-bold uppercase tracking-wider text-folio-secondary"
+                                            >
+                                                ISBN-13
+                                            </dt>
+                                            <dd class="mt-0.5 break-all font-mono text-folio-on-surface">
+                                                {{ livro.isbn }}
+                                            </dd>
+                                        </div>
+                                        <div>
+                                            <dt
+                                                class="text-xs font-bold uppercase tracking-wider text-folio-secondary"
+                                            >
+                                                Categoria
+                                            </dt>
+                                            <dd class="mt-0.5">
+                                                <span
+                                                    v-if="livro.categoria?.nome"
+                                                    class="inline-block rounded-full px-3 py-1 text-[10px] font-bold uppercase tracking-wider"
+                                                    :class="chipCategoria(livro)"
+                                                >
+                                                    {{ livro.categoria.nome }}
+                                                </span>
+                                                <span v-else class="text-folio-outline">—</span>
+                                            </dd>
+                                        </div>
+                                        <div>
+                                            <dt
+                                                class="text-xs font-bold uppercase tracking-wider text-folio-secondary"
+                                            >
+                                                Data de publicação
+                                            </dt>
+                                            <dd class="mt-0.5 text-folio-on-surface">
+                                                {{ formatarData(livro.publicado_em) }}
+                                            </dd>
+                                        </div>
+                                    </dl>
+                                </div>
+                                <div class="mt-4 flex flex-wrap gap-2">
+                                    <Link
+                                        v-if="podeEditar"
+                                        :href="route('livros.edit', livro.id)"
+                                        class="inline-flex flex-1 items-center justify-center gap-2 rounded-xl bg-folio-primary px-4 py-2.5 font-headline text-sm font-bold text-folio-on-primary shadow-sm transition-opacity hover:opacity-95 min-[380px]:flex-none"
+                                        @click="alternarExpansaoLivro(livro.id)"
+                                    >
+                                        <span class="material-symbols-outlined text-[20px]">edit</span>
+                                        Editar
+                                    </Link>
+                                    <button
+                                        type="button"
+                                        class="inline-flex flex-1 items-center justify-center gap-2 rounded-xl border border-folio-outline-variant/30 bg-white px-4 py-2.5 font-headline text-sm font-bold text-folio-on-surface transition-colors hover:bg-folio-surface-high disabled:cursor-not-allowed disabled:opacity-40 min-[380px]:flex-none"
+                                        :disabled="!podeExcluir"
+                                        @click="abrirModalExcluir(livro)"
+                                    >
+                                        <span class="material-symbols-outlined text-[20px]">delete</span>
+                                        Excluir
+                                    </button>
+                                </div>
+                            </div>
+                        </Transition>
+                    </div>
+                </div>
+
+                <div v-if="livros.data.length > 0" class="hidden overflow-x-auto md:block">
                     <table class="w-full min-w-[56rem] border-collapse text-left">
                         <thead>
                             <tr class="bg-folio-surface-low/80">
