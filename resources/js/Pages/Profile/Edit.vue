@@ -16,39 +16,47 @@ defineProps({
 </script>
 
 <template>
-    <Head title="Profile" />
+    <Head title="Perfil" />
 
     <AuthenticatedLayout>
-        <template #header>
-            <h2
-                class="text-xl font-semibold leading-tight text-gray-800"
-            >
-                Profile
-            </h2>
-        </template>
-
-        <div class="py-12">
-            <div class="mx-auto max-w-7xl space-y-6 sm:px-6 lg:px-8">
-                <div
-                    class="bg-white p-4 shadow sm:rounded-lg sm:p-8"
+        <div class="bg-folio-surface pb-12 pt-6 sm:pt-8">
+            <div class="mx-auto max-w-3xl px-4 sm:px-6 lg:px-8">
+                <p
+                    class="mb-2 text-xs font-bold uppercase tracking-widest text-folio-secondary"
                 >
-                    <UpdateProfileInformationForm
-                        :must-verify-email="mustVerifyEmail"
-                        :status="status"
-                        class="max-w-xl"
-                    />
-                </div>
-
-                <div
-                    class="bg-white p-4 shadow sm:rounded-lg sm:p-8"
+                    Conta
+                </p>
+                <h1
+                    class="font-headline text-3xl font-extrabold tracking-tight text-folio-on-surface sm:text-4xl"
                 >
-                    <UpdatePasswordForm class="max-w-xl" />
-                </div>
+                    Perfil e segurança
+                </h1>
+                <p class="mt-2 max-w-xl text-sm leading-relaxed text-folio-secondary">
+                    Atualize seus dados, a senha ou exclua a conta. As mudanças
+                    são aplicadas ao salvar.
+                </p>
 
-                <div
-                    class="bg-white p-4 shadow sm:rounded-lg sm:p-8"
-                >
-                    <DeleteUserForm class="max-w-xl" />
+                <div class="mt-10 space-y-8">
+                    <div
+                        class="overflow-hidden rounded-2xl border border-folio-outline-variant/15 bg-white shadow-folio"
+                    >
+                        <UpdateProfileInformationForm
+                            :must-verify-email="mustVerifyEmail"
+                            :status="status"
+                        />
+                    </div>
+
+                    <div
+                        class="overflow-hidden rounded-2xl border border-folio-outline-variant/15 bg-white shadow-folio"
+                    >
+                        <UpdatePasswordForm />
+                    </div>
+
+                    <div
+                        class="overflow-hidden rounded-2xl border border-folio-outline-variant/15 bg-white shadow-folio"
+                    >
+                        <DeleteUserForm />
+                    </div>
                 </div>
             </div>
         </div>

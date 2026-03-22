@@ -23,7 +23,7 @@ const submit = () => {
 
     <AuthSplitLayout
         hero-title="Recuperar o acesso"
-        hero-paragraph="Indique o e-mail da sua conta e enviaremos um link para definir uma nova senha com segurança."
+        hero-paragraph="Informe o e-mail da sua conta e enviaremos um link para definir uma nova senha com segurança."
     >
         <div
             class="overflow-hidden rounded-2xl border border-folio-outline-variant/10 bg-white shadow-folio"
@@ -40,8 +40,8 @@ const submit = () => {
 
             <div class="space-y-6 p-8">
                 <p class="text-sm leading-relaxed text-folio-secondary">
-                    Sem problema. Digite o e-mail associado à conta e receberá um
-                    link para escolher uma nova senha.
+                    Sem problema. Digite o e-mail da conta e enviaremos um link
+                    para você escolher uma nova senha.
                 </p>
 
                 <div

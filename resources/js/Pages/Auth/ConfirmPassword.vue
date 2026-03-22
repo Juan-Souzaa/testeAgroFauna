@@ -18,11 +18,11 @@ const submit = () => {
 </script>
 
 <template>
-    <Head title="Confirmar sessão" />
+    <Head title="Confirmar identidade" />
 
     <AuthSplitLayout
         hero-title="Área protegida"
-        hero-paragraph="Por segurança, confirme a sua identidade antes de continuar nesta sessão."
+        hero-paragraph="Por segurança, confirme quem você é antes de continuar."
     >
         <div
             class="overflow-hidden rounded-2xl border border-folio-outline-variant/10 bg-white shadow-folio"
@@ -39,8 +39,8 @@ const submit = () => {
 
             <form class="space-y-6 p-8" @submit.prevent="submit">
                 <p class="text-sm leading-relaxed text-folio-secondary">
-                    Esta é uma zona sensível da aplicação. Introduza a sua
-                    senha atual para prosseguir.
+                    Esta é uma área sensível do sistema. Digite sua senha atual
+                    para continuar.
                 </p>
 
                 <div class="space-y-2">

@@ -5,7 +5,7 @@ import { loginHeroImageUrl } from '@/config/authUi.js';
 const props = defineProps({
     heroTitle: {
         type: String,
-        default: 'A curadoria da sua biblioteca',
+        default: 'O acervo da sua livraria, sob controle',
     },
     /** Se vazio, usa o texto padrão com o nome da app */
     heroParagraph: {
@@ -20,7 +20,7 @@ const heroBlurb = computed(() => {
     if (props.heroParagraph) {
         return props.heroParagraph;
     }
-    return `${appName} — gestão inteligente para livrarias e acervos que exigem precisão.`;
+    return `${appName} — administração inteligente para livrarias e acervos que exigem precisão.`;
 });
 </script>
 

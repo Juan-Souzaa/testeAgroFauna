@@ -51,8 +51,8 @@ const verificationLinkSent = computed(
                     v-if="verificationLinkSent"
                     class="rounded-lg border border-emerald-200 bg-emerald-50 px-4 py-3 text-sm font-medium text-emerald-800"
                 >
-                    Foi enviado um novo link de verificação para o e-mail que
-                    indicou no cadastro.
+                    Enviamos um novo link de verificação para o e-mail usado no
+                    cadastro.
                 </div>
 
                 <form
@@ -73,7 +73,7 @@ const verificationLinkSent = computed(
                         as="button"
                         class="rounded-xl border border-folio-outline-variant/30 bg-folio-surface-low px-5 py-3 text-center text-sm font-semibold text-folio-secondary transition-colors hover:bg-folio-surface-high"
                     >
-                        Terminar sessão
+                        Sair
                     </Link>
                 </form>
             </div>

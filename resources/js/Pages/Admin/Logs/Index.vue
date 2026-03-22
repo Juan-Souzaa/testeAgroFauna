@@ -69,7 +69,7 @@ const intervaloLista = computed(() => {
                 <p
                     class="max-w-2xl text-sm font-medium text-folio-secondary sm:text-base"
                 >
-                    Histórico de ações relevantes no catálogo e na gestão de
+                    Histórico de ações relevantes no catálogo e no controle de
                     usuários (quem fez o quê e quando).
                 </p>
             </div>

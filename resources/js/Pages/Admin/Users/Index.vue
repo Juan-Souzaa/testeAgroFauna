@@ -462,7 +462,7 @@ const intervaloLista = computed(() => {
             <p
                 class="mt-10 text-center text-[10px] font-bold uppercase tracking-widest text-folio-outline/80"
             >
-                Livraria · gestão de acesso
+                Livraria · controle de acesso
             </p>
         </div>
     </AuthenticatedLayout>

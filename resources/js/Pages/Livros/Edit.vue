@@ -310,7 +310,7 @@ function executarExclusao() {
                                         class="material-symbols-outlined text-lg"
                                         >save</span
                                     >
-                                    Guardar alterações
+                                    Salvar alterações
                                 </button>
                             </div>
                         </div>
