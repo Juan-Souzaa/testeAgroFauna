@@ -54,4 +54,17 @@ class UserController extends Controller
             ->back()
             ->with('success', 'Papel do usuário atualizado.');
     }
+
+    public function destroy(User $user, UserService $usuarios): RedirectResponse
+    {
+        try {
+            $usuarios->excluir($user, request()->user());
+        } catch (ValidationException $e) {
+            return redirect()->back()->withErrors($e->errors());
+        }
+
+        return redirect()
+            ->back()
+            ->with('success', 'Usuário removido.');
+    }
 }

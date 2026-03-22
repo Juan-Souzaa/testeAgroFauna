@@ -36,6 +36,7 @@ Route::middleware('auth')->group(function () {
         Route::get('/admin/usuarios', [UserController::class, 'index'])->name('admin.users.index');
         Route::post('/admin/usuarios', [UserController::class, 'store'])->name('admin.users.store');
         Route::patch('/admin/usuarios/{user}/papel', [UserController::class, 'updateRole'])->name('admin.users.role');
+        Route::delete('/admin/usuarios/{user}', [UserController::class, 'destroy'])->name('admin.users.destroy');
     });
 });
 

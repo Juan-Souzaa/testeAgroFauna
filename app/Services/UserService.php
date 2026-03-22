@@ -59,8 +59,24 @@ class UserService
         $usuario->syncRoles([$novoPapel]);
     }
 
-    
-   
+    public function excluir(User $alvo, User $autor): void
+    {
+        if ($alvo->id === $autor->id) {
+            throw ValidationException::withMessages([
+                'user' => 'Você não pode excluir a própria conta aqui. Use a página de perfil.',
+            ]);
+        }
+
+        if ($alvo->hasRole('admin') && User::role('admin')->count() <= 1) {
+            throw ValidationException::withMessages([
+                'user' => 'Não é possível excluir o único administrador do sistema.',
+            ]);
+        }
+
+        $alvo->syncRoles([]);
+        $alvo->delete();
+    }
+
     private function NaoExisteOutroAdministrador(
         User $usuario,
         string $novoPapel,
