@@ -37,7 +37,7 @@ const submit = () => {
                 <h2
                     class="font-headline text-lg font-bold text-folio-on-surface"
                 >
-                    Novo utilizador
+                    Novo usuário
                 </h2>
             </div>
 
