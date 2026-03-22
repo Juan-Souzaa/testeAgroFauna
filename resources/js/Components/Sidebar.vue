@@ -6,6 +6,10 @@ const aberto = defineModel('aberto', { type: Boolean, default: false });
 
 const page = usePage();
 
+const podeVerLivros = computed(() =>
+    (page.props.permissions ?? []).includes('books.view'),
+);
+
 const podeCadastrarLivro = computed(() =>
     (page.props.permissions ?? []).includes('books.create'),
 );
@@ -37,7 +41,11 @@ function fechar() {
         ]"
     >
         <div class="mb-6 px-4 py-2">
-            <Link :href="route('dashboard')" class="block" @click="fechar">
+            <Link
+                :href="podeVerLivros ? route('livros.index') : route('dashboard')"
+                class="block"
+                @click="fechar"
+            >
                 <span
                     class="text-lg font-extrabold tracking-tighter text-folio-primary-container"
                     >Folio Admin</span
@@ -50,14 +58,19 @@ function fechar() {
 
         <nav class="flex grow flex-col gap-y-1">
             <Link
-                :href="route('dashboard')"
-                :class="linkSidebar(route().current('dashboard'))"
+                v-if="podeVerLivros"
+                :href="route('livros.index')"
+                :class="
+                    linkSidebar(
+                        route().current('livros.index'),
+                    )
+                "
                 @click="fechar"
             >
                 <span class="material-symbols-outlined text-[22px]">
-                    inventory_2
+                    menu_book
                 </span>
-                Painel
+                Livros
             </Link>
 
             <Link

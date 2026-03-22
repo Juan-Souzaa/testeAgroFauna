@@ -8,6 +8,10 @@ import { computed, ref, watch } from 'vue';
 const page = usePage();
 const sidebarAberto = ref(false);
 
+const podeVerLivros = computed(() =>
+    (page.props.permissions ?? []).includes('books.view'),
+);
+
 const podeCadastrarLivro = computed(() =>
     (page.props.permissions ?? []).includes('books.create'),
 );
@@ -58,10 +62,11 @@ watch(
                         class="hidden items-center gap-6 md:flex md:gap-8"
                     >
                         <Link
-                            :href="route('dashboard')"
-                            :class="linkTopo(route().current('dashboard'))"
+                            v-if="podeVerLivros"
+                            :href="route('livros.index')"
+                            :class="linkTopo(route().current('livros.index'))"
                         >
-                            Painel
+                            Livros
                         </Link>
                         <Link
                             v-if="podeCadastrarLivro"
