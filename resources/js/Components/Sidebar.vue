@@ -10,6 +10,10 @@ const podeVerLivros = computed(() =>
     (page.props.permissions ?? []).includes('books.view'),
 );
 
+const podeGerirUsuarios = computed(() =>
+    (page.props.permissions ?? []).includes('users.manage'),
+);
+
 const linkSidebar = (ativo) => [
     'flex items-center gap-3 rounded-lg px-4 py-3 text-sm font-headline transition-all duration-200 select-none',
     ativo
@@ -67,6 +71,22 @@ function fechar() {
                     menu_book
                 </span>
                 Livros
+            </Link>
+
+            <Link
+                v-if="podeGerirUsuarios"
+                :href="route('admin.users.index')"
+                :class="
+                    linkSidebar(
+                        route().current('admin.users.index'),
+                    )
+                "
+                @click="fechar"
+            >
+                <span class="material-symbols-outlined text-[22px]">
+                    group
+                </span>
+                Usuários
             </Link>
         </nav>
 
