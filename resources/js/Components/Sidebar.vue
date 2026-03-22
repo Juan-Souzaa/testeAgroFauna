@@ -6,8 +6,8 @@ const aberto = defineModel('aberto', { type: Boolean, default: false });
 
 const page = usePage();
 
-const podeCadastrarLivro = computed(() =>
-    (page.props.permissions ?? []).includes('books.create'),
+const podeVerLivros = computed(() =>
+    (page.props.permissions ?? []).includes('books.view'),
 );
 
 const linkSidebar = (ativo) => [
@@ -37,39 +37,36 @@ function fechar() {
         ]"
     >
         <div class="mb-6 px-4 py-2">
-            <Link :href="route('dashboard')" class="block" @click="fechar">
+            <Link
+                :href="podeVerLivros ? route('livros.index') : route('profile.edit')"
+                class="block"
+                @click="fechar"
+            >
                 <span
                     class="text-lg font-extrabold tracking-tighter text-folio-primary-container"
-                    >Folio Admin</span
+                    >Livraria</span
                 >
             </Link>
             <p class="mt-1 text-xs font-medium text-folio-secondary">
-                Curadoria premium
+                Catálogo 
             </p>
         </div>
 
         <nav class="flex grow flex-col gap-y-1">
             <Link
-                :href="route('dashboard')"
-                :class="linkSidebar(route().current('dashboard'))"
+                v-if="podeVerLivros"
+                :href="route('livros.index')"
+                :class="
+                    linkSidebar(
+                        route().current('livros.index'),
+                    )
+                "
                 @click="fechar"
             >
                 <span class="material-symbols-outlined text-[22px]">
-                    inventory_2
+                    menu_book
                 </span>
-                Painel
-            </Link>
-
-            <Link
-                v-if="podeCadastrarLivro"
-                :href="route('livros.create')"
-                :class="linkSidebar(route().current('livros.create'))"
-                @click="fechar"
-            >
-                <span class="material-symbols-outlined text-[22px]">
-                    add_circle
-                </span>
-                Novo livro
+                Livros
             </Link>
         </nav>
 

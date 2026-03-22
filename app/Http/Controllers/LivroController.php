@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\ListarLivrosRequest;
 use App\Http\Requests\StoreLivroRequest;
 use App\Models\Categoria;
 use App\Models\Livro;
@@ -11,6 +12,14 @@ use Inertia\Response;
 
 class LivroController extends Controller
 {
+    public function index(ListarLivrosRequest $request, LivroService $livros): Response
+    {
+        return Inertia::render('Livros/Index', [
+            'livros' => $livros->listarPaginado($request->itensPorPagina()),
+            'porPaginaOpcoes' => config('livros.per_page.options'),
+        ]);
+    }
+
     public function create(): Response
     {
         $this->authorize('create', Livro::class);
@@ -25,7 +34,7 @@ class LivroController extends Controller
         $livros->criar($request->validated());
 
         return redirect()
-            ->route('dashboard')
+            ->route('livros.index')
             ->with('success', 'Livro cadastrado com sucesso.');
     }
 }

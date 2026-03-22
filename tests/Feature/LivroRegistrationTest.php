@@ -68,7 +68,7 @@ class LivroRegistrationTest extends TestCase
         $response->assertOk();
     }
 
-    public function test_utilizador_com_permissao_pode_cadastrar_livro_e_e_redirecionado_ao_dashboard_com_mensagem(): void
+    public function test_utilizador_com_permissao_pode_cadastrar_livro_e_e_redirecionado_a_listagem_com_mensagem(): void
     {
         $user = User::factory()->create();
         $user->assignRole('editor');
@@ -85,7 +85,7 @@ class LivroRegistrationTest extends TestCase
 
         $response = $this->actingAs($user)->post(route('livros.store'), $payload);
 
-        $response->assertRedirect(route('dashboard'));
+        $response->assertRedirect(route('livros.index'));
         $response->assertSessionHas('success');
 
         $this->assertDatabaseHas('livros', [

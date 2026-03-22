@@ -34,6 +34,11 @@ export default {
                     outline: '#757682',
                     'outline-variant': '#c5c5d3',
                     'on-primary': '#ffffff',
+                    error: '#ba1a1a',
+                    'error-container': '#ffdad6',
+                    'tertiary-container': '#384055',
+                    'on-tertiary-fixed': '#131b2e',
+                    'on-secondary-fixed-variant': '#3a485b',
                 },
             },
             boxShadow: {
