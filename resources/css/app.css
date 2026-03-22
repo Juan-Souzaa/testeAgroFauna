@@ -11,4 +11,13 @@
             'opsz' 24;
         font-size: 1.25rem;
     }
+
+
+    .folio-auth-input {
+        @apply block w-full rounded-xl border-0 bg-folio-surface-highest py-3 text-folio-on-surface outline outline-1 outline-folio-outline-variant/20 transition-all placeholder:text-folio-outline/50 focus:bg-white focus:outline focus:outline-2 focus:outline-folio-primary focus:ring-2 focus:ring-folio-primary/10;
+    }
+
+    .folio-auth-input-readonly {
+        @apply block w-full cursor-not-allowed rounded-xl border-0 bg-folio-surface-high py-3 text-folio-secondary outline outline-1 outline-folio-outline-variant/20;
+    }
 }
