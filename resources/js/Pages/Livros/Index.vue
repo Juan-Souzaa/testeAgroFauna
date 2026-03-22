@@ -126,7 +126,7 @@ const intervaloLista = computed(() => {
             <div class="mb-8 sm:mb-10">
                 <span
                     class="mb-2 block text-xs font-bold uppercase tracking-widest text-folio-primary"
-                    >Gestão de catálogo</span
+                    >Administração do catálogo</span
                 >
                 <h1
                     class="font-headline text-3xl font-extrabold tracking-tight text-folio-on-surface sm:text-4xl"

@@ -97,7 +97,7 @@ const form = useForm({
                     class="rounded-xl border border-amber-200/80 bg-amber-50/90 px-4 py-3 text-sm text-amber-950"
                 >
                     <p class="font-medium">
-                        O seu e-mail ainda não foi confirmado.
+                        Seu e-mail ainda não foi confirmado.
                     </p>
                     <Link
                         :href="route('verification.send')"
@@ -111,7 +111,7 @@ const form = useForm({
                         v-show="status === 'verification-link-sent'"
                         class="mt-2 text-sm font-semibold text-emerald-800"
                     >
-                        Enviamos um novo link para o seu e-mail.
+                        Enviamos um novo link para seu e-mail.
                     </p>
                 </div>
 

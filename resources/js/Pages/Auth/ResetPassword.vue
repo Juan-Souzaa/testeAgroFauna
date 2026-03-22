@@ -170,7 +170,7 @@ const submit = () => {
                     class="flex w-full items-center justify-center gap-2 rounded-xl bg-gradient-to-br from-folio-primary to-folio-primary-container py-4 font-headline text-base font-bold text-folio-on-primary shadow-lg shadow-folio-primary/20 transition-all duration-200 hover:shadow-xl disabled:opacity-60"
                     :disabled="form.processing"
                 >
-                    <span>Guardar nova senha</span>
+                    <span>Salvar nova senha</span>
                     <span class="material-symbols-outlined text-lg"
                         >check</span
                     >

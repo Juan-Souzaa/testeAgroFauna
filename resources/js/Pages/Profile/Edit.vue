@@ -32,8 +32,8 @@ defineProps({
                     Perfil e segurança
                 </h1>
                 <p class="mt-2 max-w-xl text-sm leading-relaxed text-folio-secondary">
-                    Atualize seus dados, a senha ou encerre a conta. As alterações
-                    valem assim que você salvar.
+                    Atualize seus dados, a senha ou exclua a conta. As mudanças
+                    são aplicadas ao salvar.
                 </p>
 
                 <div class="mt-10 space-y-8">
