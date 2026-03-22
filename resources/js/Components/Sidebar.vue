@@ -14,6 +14,10 @@ const podeGerirUsuarios = computed(() =>
     (page.props.permissions ?? []).includes('users.manage'),
 );
 
+const podeVerLogs = computed(() =>
+    (page.props.permissions ?? []).includes('logs.view'),
+);
+
 const linkSidebar = (ativo) => [
     'flex items-center gap-3 rounded-lg px-4 py-3 text-sm font-headline transition-all duration-200 select-none',
     ativo
@@ -87,6 +91,22 @@ function fechar() {
                     group
                 </span>
                 Usuários
+            </Link>
+
+            <Link
+                v-if="podeVerLogs"
+                :href="route('admin.logs.index')"
+                :class="
+                    linkSidebar(
+                        route().current('admin.logs.index'),
+                    )
+                "
+                @click="fechar"
+            >
+                <span class="material-symbols-outlined text-[22px]">
+                    history
+                </span>
+                Atividades
             </Link>
         </nav>
 
