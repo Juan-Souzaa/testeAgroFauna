@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\Admin\StoreUserRequest;
 use App\Http\Requests\Admin\UpdateUserRoleRequest;
 use App\Models\User;
 use App\Services\UserService;
@@ -22,6 +23,21 @@ class UserController extends Controller
             'papeis' => $usuarios->papeisOrdenados(),
             'estatisticas' => $usuarios->estatisticas(),
         ]);
+    }
+
+    public function store(StoreUserRequest $request, UserService $usuarios): RedirectResponse
+    {
+        $dados = $request->validated();
+
+        $usuarios->criarEditor(
+            $dados['name'],
+            $dados['email'],
+            $dados['password'],
+        );
+
+        return redirect()
+            ->back()
+            ->with('success', 'Usuário criado como editor. Ele já pode entrar com o e-mail e a senha definidos.');
     }
 
     public function updateRole(UpdateUserRoleRequest $request, User $user, UserService $usuarios): RedirectResponse

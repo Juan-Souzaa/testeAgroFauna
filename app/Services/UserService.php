@@ -35,6 +35,19 @@ class UserService
     }
 
     
+    public function criarEditor(string $name, string $email, string $password): User
+    {
+        $user = User::create([
+            'name' => $name,
+            'email' => $email,
+            'password' => $password,
+        ]);
+
+        $user->assignRole('editor');
+
+        return $user;
+    }
+
     public function alterarPapel(User $usuario, string $novoPapel, User $autor): void
     {
         if ($this->NaoExisteOutroAdministrador($usuario, $novoPapel, $autor)) {
