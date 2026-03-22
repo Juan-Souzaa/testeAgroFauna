@@ -42,9 +42,9 @@ const verificationLinkSent = computed(
 
             <div class="space-y-6 p-8">
                 <p class="text-sm leading-relaxed text-folio-secondary">
-                    Obrigado pelo registo. Antes de começar, confirme o seu
-                    e-mail através do link que enviámos para a sua caixa de
-                    entrada. Se não recebeu a mensagem, pode pedir um novo envio.
+                    Obrigado pelo cadastro. Antes de começar, confirme seu
+                    e-mail pelo link que enviamos para sua caixa de entrada.
+                    Se você não recebeu a mensagem, pode solicitar um novo envio.
                 </p>
 
                 <div
@@ -52,7 +52,7 @@ const verificationLinkSent = computed(
                     class="rounded-lg border border-emerald-200 bg-emerald-50 px-4 py-3 text-sm font-medium text-emerald-800"
                 >
                     Foi enviado um novo link de verificação para o e-mail que
-                    indicou no registo.
+                    indicou no cadastro.
                 </div>
 
                 <form

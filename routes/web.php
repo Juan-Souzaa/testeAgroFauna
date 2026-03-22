@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\Admin\UserController;
 use App\Http\Controllers\LivroController;
 use App\Http\Controllers\ProfileController;
 use Illuminate\Support\Facades\Route;
@@ -29,6 +30,13 @@ Route::middleware('auth')->group(function () {
 
     Route::middleware('permission:books.delete')->group(function () {
         Route::delete('/livros/{livro}', [LivroController::class, 'destroy'])->name('livros.destroy');
+    });
+
+    Route::middleware('permission:users.manage')->group(function () {
+        Route::get('/admin/usuarios', [UserController::class, 'index'])->name('admin.users.index');
+        Route::post('/admin/usuarios', [UserController::class, 'store'])->name('admin.users.store');
+        Route::patch('/admin/usuarios/{user}/papel', [UserController::class, 'updateRole'])->name('admin.users.role');
+        Route::delete('/admin/usuarios/{user}', [UserController::class, 'destroy'])->name('admin.users.destroy');
     });
 });
 
