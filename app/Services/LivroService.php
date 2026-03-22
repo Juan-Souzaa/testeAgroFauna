@@ -7,10 +7,21 @@ use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 
 class LivroService
 {
-    public function listarPaginado(int $porPagina): LengthAwarePaginator
+    public function listarPaginado(int $porPagina, ?string $busca = null): LengthAwarePaginator
     {
-        return Livro::query()
-            ->with('categoria:id,nome')
+        $query = Livro::query()
+            ->with('categoria:id,nome');
+
+        if ($busca !== null && $busca !== '') {
+            $padrao = '%'.$busca.'%';
+            $query->where(function ($q) use ($padrao): void {
+                $q->whereLike('titulo', $padrao)
+                    ->orWhereLike('autor', $padrao)
+                    ->orWhereLike('isbn', $padrao);
+            });
+        }
+
+        return $query
             ->orderByDesc('id')
             ->paginate($porPagina)
             ->withQueryString();

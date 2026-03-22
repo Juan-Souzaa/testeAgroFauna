@@ -18,8 +18,9 @@ class LivroController extends Controller
     public function index(ListarLivrosRequest $request, LivroService $livros): Response
     {
         return Inertia::render('Livros/Index', [
-            'livros' => $livros->listarPaginado($request->itensPorPagina()),
+            'livros' => $livros->listarPaginado($request->itensPorPagina(), $request->termoBusca()),
             'porPaginaOpcoes' => config('livros.per_page.options'),
+            'busca' => $request->termoBusca() ?? '',
         ]);
     }
 

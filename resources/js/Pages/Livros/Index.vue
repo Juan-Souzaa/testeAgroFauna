@@ -3,7 +3,7 @@ import ConfirmDeleteModal from '@/Components/ConfirmDeleteModal.vue';
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout.vue';
 import { formatarData, formatarPreco } from '@/utils/format';
 import { Head, Link, router, usePage } from '@inertiajs/vue3';
-import { computed, ref, watch } from 'vue';
+import { computed, onBeforeUnmount, ref, watch } from 'vue';
 
 const page = usePage();
 
@@ -16,16 +16,65 @@ const props = defineProps({
         type: Array,
         required: true,
     },
+    busca: {
+        type: String,
+        default: '',
+    },
 });
 
 function mudarPorPagina(event) {
     const perPage = Number(event.target.value);
-    router.get(
-        route('livros.index'),
-        { per_page: perPage, page: 1 },
-        { preserveScroll: true },
-    );
+    const params = { per_page: perPage, page: 1 };
+    const b = (props.busca || '').trim();
+    if (b !== '') {
+        params.busca = b;
+    }
+    router.get(route('livros.index'), params, {
+        preserveScroll: true,
+        preserveState: true,
+        replace: true,
+    });
 }
+
+const buscaLocal = ref(props.busca);
+
+watch(
+    () => props.busca,
+    (v) => {
+        buscaLocal.value = v;
+    },
+);
+
+let buscaDebounceTimer = null;
+
+onBeforeUnmount(() => {
+    if (buscaDebounceTimer !== null) {
+        clearTimeout(buscaDebounceTimer);
+    }
+});
+
+watch(buscaLocal, (val) => {
+    if (buscaDebounceTimer !== null) {
+        clearTimeout(buscaDebounceTimer);
+    }
+    buscaDebounceTimer = setTimeout(() => {
+        buscaDebounceTimer = null;
+        const t = (val || '').trim();
+        const atual = (props.busca || '').trim();
+        if (t === atual) {
+            return;
+        }
+        const params = { per_page: props.livros.per_page, page: 1 };
+        if (t !== '') {
+            params.busca = t;
+        }
+        router.get(route('livros.index'), params, {
+            preserveState: true,
+            preserveScroll: true,
+            replace: true,
+        });
+    }, 500);
+});
 
 const podeCadastrar = computed(() =>
     (page.props.permissions ?? []).includes('books.create'),
@@ -141,8 +190,10 @@ const intervaloLista = computed(() => {
                     >search</span
                 >
                 <input
+                    id="busca-livros"
+                    v-model="buscaLocal"
                     type="search"
-                    disabled
+                    autocomplete="off"
                     class="w-full rounded-full border-0 bg-folio-surface-low py-2 pl-10 pr-4 text-sm text-folio-on-surface placeholder:text-folio-outline/80"
                     placeholder="Pesquisar ISBN, título ou autor…"
                 />
