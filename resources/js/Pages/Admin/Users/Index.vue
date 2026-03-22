@@ -1,10 +1,12 @@
 <script setup>
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout.vue';
-import InputError from '@/Components/InputError.vue';
+import CriarEditorModal from '@/Components/Admin/CriarEditorModal.vue';
 import { Head, Link, router, usePage } from '@inertiajs/vue3';
-import { computed } from 'vue';
+import { computed, ref } from 'vue';
 
 const page = usePage();
+
+const modalCriarAberto = ref(false);
 
 const props = defineProps({
     usuarios: {
@@ -36,8 +38,6 @@ function aoMudarPapel(user, event) {
         { preserveScroll: true },
     );
 }
-
-const erroPapel = computed(() => page.props.errors?.role ?? '');
 
 function iniciais(nome) {
     const partes = (nome || '?').trim().split(/\s+/).filter(Boolean);
@@ -96,23 +96,27 @@ const intervaloLista = computed(() => {
                     <p
                         class="max-w-lg text-sm font-medium text-folio-secondary sm:text-base"
                     >
-                        Gerencie permissões e papéis da equipe. O editor pode
-                        criar e editar livros; apenas administradores excluem
-                        livros e acessam esta área.
+                        Gerencie permissões e papéis da equipe. Novos acessos são
+                        criados aqui (perfil editor). O registro público está
+                        desativado. Editores gerenciam livros; administradores
+                        excluem livros e esta área.
                     </p>
                 </div>
                 <button
                     type="button"
-                    disabled
-                    title="Criação de contas pelo painel pode ser adicionada depois."
-                    class="inline-flex shrink-0 cursor-not-allowed items-center gap-2 rounded-xl bg-folio-primary px-6 py-3 text-sm font-semibold text-folio-on-primary opacity-60 shadow-md"
+                    class="inline-flex shrink-0 items-center gap-2 rounded-xl bg-folio-primary px-6 py-3 text-sm font-semibold text-folio-on-primary shadow-md transition-opacity hover:opacity-95"
+                    :aria-expanded="modalCriarAberto"
+                    aria-haspopup="dialog"
+                    @click="modalCriarAberto = true"
                 >
                     <span class="material-symbols-outlined text-[20px]"
                         >person_add</span
                     >
-                    Criar usuário
+                    Criar editor
                 </button>
             </div>
+
+            <CriarEditorModal v-model:show="modalCriarAberto" />
 
             <!-- Cards estilo Stitch / bento -->
             <div class="mb-10 grid grid-cols-1 gap-6 sm:mb-12 md:grid-cols-3">
