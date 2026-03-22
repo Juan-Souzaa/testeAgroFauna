@@ -67,4 +67,40 @@ class UserManagementTest extends TestCase
         $response->assertSessionHasErrors('role');
         $this->assertTrue($admin->fresh()->hasRole('admin'));
     }
+
+    public function test_admin_cria_editor(): void
+    {
+        $admin = User::factory()->create();
+        $admin->assignRole('admin');
+
+        $response = $this->actingAs($admin)->from(route('admin.users.index'))->post(route('admin.users.store'), [
+            'name' => 'Novo Editor',
+            'email' => 'novo.editor@example.com',
+            'password' => 'password',
+            'password_confirmation' => 'password',
+        ]);
+
+        $response->assertRedirect();
+        $response->assertSessionHas('success');
+
+        $criado = User::query()->where('email', 'novo.editor@example.com')->first();
+        $this->assertNotNull($criado);
+        $this->assertTrue($criado->hasRole('editor'));
+    }
+
+    public function test_editor_nao_pode_criar_usuario(): void
+    {
+        $editor = User::factory()->create();
+        $editor->assignRole('editor');
+
+        $response = $this->actingAs($editor)->post(route('admin.users.store'), [
+            'name' => 'Tentativa',
+            'email' => 'tentativa@example.com',
+            'password' => 'password',
+            'password_confirmation' => 'password',
+        ]);
+
+        $response->assertForbidden();
+        $this->assertNull(User::query()->where('email', 'tentativa@example.com')->first());
+    }
 }
