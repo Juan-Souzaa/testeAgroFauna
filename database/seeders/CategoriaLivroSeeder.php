@@ -14,8 +14,8 @@ class CategoriaLivroSeeder extends Seeder
         $tecnico = Categoria::query()->firstOrCreate(['nome' => 'Técnico']);
         $biografia = Categoria::query()->firstOrCreate(['nome' => 'Biografia']);
 
-        Livro::factory()->count(2)->create(['categoria_id' => $ficcao->id]);
-        Livro::factory()->count(2)->create(['categoria_id' => $tecnico->id]);
-        Livro::factory()->count(1)->create(['categoria_id' => $biografia->id]);
+        Livro::factory()->count(10)->create(['categoria_id' => $ficcao->id]);
+        Livro::factory()->count(10)->create(['categoria_id' => $tecnico->id]);
+        Livro::factory()->count(8)->create(['categoria_id' => $biografia->id]);
     }
 }
