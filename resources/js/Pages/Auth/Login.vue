@@ -76,7 +76,7 @@ const submit = () => {
                             autofocus
                             autocomplete="username"
                             placeholder="seu@email.com"
-                            :class="[inputClass, 'pl-11 pr-4']"
+                            class="folio-auth-input pl-11 pr-4"
                         />
                     </div>
                     <InputError :message="form.errors.email" />
