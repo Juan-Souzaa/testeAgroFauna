@@ -296,7 +296,7 @@ const intervaloLista = computed(() => {
                 </p>
 
                 <div v-else class="overflow-x-auto">
-                    <table class="w-full min-w-[56rem] border-collapse text-left">
+                    <table class="w-full min-w-[62rem] border-collapse text-left">
                         <thead>
                             <tr class="bg-folio-surface-low/50">
                                 <th
