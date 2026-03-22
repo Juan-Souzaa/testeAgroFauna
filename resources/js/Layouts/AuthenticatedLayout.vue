@@ -8,20 +8,9 @@ import { computed, ref, watch } from 'vue';
 const page = usePage();
 const sidebarAberto = ref(false);
 
-const podeVerLivros = computed(() =>
-    (page.props.permissions ?? []).includes('books.view'),
-);
-
 const podeCadastrarLivro = computed(() =>
     (page.props.permissions ?? []).includes('books.create'),
 );
-
-const linkTopo = (ativo) => [
-    'font-headline text-sm tracking-tight transition-all',
-    ativo
-        ? 'border-b-2 border-folio-primary pb-1 font-semibold text-folio-primary'
-        : 'cursor-pointer text-slate-500 hover:text-folio-primary',
-];
 
 watch(
     () => page.url,
@@ -53,29 +42,19 @@ watch(
                     <h1
                         class="font-headline truncate text-xl font-bold tracking-tighter text-folio-primary"
                     >
-                        The Curated Ledger
+                        Livraria
                     </h1>
                 </div>
 
-                <div class="flex shrink-0 items-center gap-4 sm:gap-6">
-                    <nav
-                        class="hidden items-center gap-6 md:flex md:gap-8"
+                <div class="flex shrink-0 items-center gap-3 sm:gap-4">
+                    <Link
+                        v-if="podeCadastrarLivro"
+                        :href="route('livros.create')"
+                        class="inline-flex items-center gap-2 rounded-xl bg-folio-primary px-4 py-2 text-sm font-headline font-bold text-folio-on-primary shadow-sm transition-opacity hover:opacity-95 active:scale-[0.98]"
                     >
-                        <Link
-                            v-if="podeVerLivros"
-                            :href="route('livros.index')"
-                            :class="linkTopo(route().current('livros.index'))"
-                        >
-                            Livros
-                        </Link>
-                        <Link
-                            v-if="podeCadastrarLivro"
-                            :href="route('livros.create')"
-                            :class="linkTopo(route().current('livros.create'))"
-                        >
-                            Novo livro
-                        </Link>
-                    </nav>
+                        <span class="material-symbols-outlined text-[20px]">add</span>
+                        Adicionar livro
+                    </Link>
 
                     <div class="flex items-center gap-3 sm:gap-4">
                         <span

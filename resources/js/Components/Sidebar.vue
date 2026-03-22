@@ -10,10 +10,6 @@ const podeVerLivros = computed(() =>
     (page.props.permissions ?? []).includes('books.view'),
 );
 
-const podeCadastrarLivro = computed(() =>
-    (page.props.permissions ?? []).includes('books.create'),
-);
-
 const linkSidebar = (ativo) => [
     'flex items-center gap-3 rounded-lg px-4 py-3 text-sm font-headline transition-all duration-200 select-none',
     ativo
@@ -42,17 +38,17 @@ function fechar() {
     >
         <div class="mb-6 px-4 py-2">
             <Link
-                :href="podeVerLivros ? route('livros.index') : route('dashboard')"
+                :href="podeVerLivros ? route('livros.index') : route('profile.edit')"
                 class="block"
                 @click="fechar"
             >
                 <span
                     class="text-lg font-extrabold tracking-tighter text-folio-primary-container"
-                    >Folio Admin</span
+                    >Livraria</span
                 >
             </Link>
             <p class="mt-1 text-xs font-medium text-folio-secondary">
-                Curadoria premium
+                Catálogo 
             </p>
         </div>
 
@@ -71,18 +67,6 @@ function fechar() {
                     menu_book
                 </span>
                 Livros
-            </Link>
-
-            <Link
-                v-if="podeCadastrarLivro"
-                :href="route('livros.create')"
-                :class="linkSidebar(route().current('livros.create'))"
-                @click="fechar"
-            >
-                <span class="material-symbols-outlined text-[22px]">
-                    add_circle
-                </span>
-                Novo livro
             </Link>
         </nav>
 
