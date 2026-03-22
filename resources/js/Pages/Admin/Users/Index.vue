@@ -77,6 +77,12 @@ const intervaloLista = computed(() => {
                 {{ $page.props.flash.success }}
             </div>
 
+            <div v-if="$page.props.errors?.role" class="mb-6 rounded-xl border border-red-200 bg-red-50 px-4 py-3 text-sm font-medium text-red-800">
+                <p class="font-medium text-red-800">
+                    {{ $page.props.errors.role }}
+                </p>
+            </div>
+
             <!-- Hero (Stitch: Controle de Acesso) -->
             <div
                 class="mb-10 flex flex-col gap-6 sm:mb-12 sm:flex-row sm:items-end sm:justify-between"
@@ -179,7 +185,7 @@ const intervaloLista = computed(() => {
                 </div>
             </div>
 
-            <InputError class="mb-4" :message="erroPapel" />
+            
 
             <!-- Tabela estilo ledger -->
             <div
