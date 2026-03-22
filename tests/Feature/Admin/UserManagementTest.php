@@ -103,4 +103,69 @@ class UserManagementTest extends TestCase
         $response->assertForbidden();
         $this->assertNull(User::query()->where('email', 'tentativa@example.com')->first());
     }
+
+    public function test_admin_exclui_editor(): void
+    {
+        $admin = User::factory()->create();
+        $admin->assignRole('admin');
+        $editor = User::factory()->create();
+        $editor->assignRole('editor');
+
+        $response = $this->actingAs($admin)->from(route('admin.users.index'))->delete(
+            route('admin.users.destroy', $editor),
+        );
+
+        $response->assertRedirect();
+        $response->assertSessionHas('success');
+        $this->assertNull(User::query()->whereKey($editor->id)->first());
+    }
+
+    public function test_admin_nao_exclui_a_si_mesmo(): void
+    {
+        $admin = User::factory()->create();
+        $admin->assignRole('admin');
+
+        $response = $this->actingAs($admin)->from(route('admin.users.index'))->delete(
+            route('admin.users.destroy', $admin),
+        );
+
+        $response->assertSessionHasErrors('user');
+        $this->assertNotNull($admin->fresh());
+    }
+
+    public function test_admin_nao_exclui_unico_administrador(): void
+    {
+        $admin = User::factory()->create();
+        $admin->assignRole('admin');
+        $outroAdmin = User::factory()->create();
+        $outroAdmin->assignRole('admin');
+
+        $response = $this->actingAs($admin)->from(route('admin.users.index'))->delete(
+            route('admin.users.destroy', $outroAdmin),
+        );
+
+        $response->assertRedirect();
+        $response->assertSessionHas('success');
+        $this->assertNull(User::query()->whereKey($outroAdmin->id)->first());
+
+        $responseUnico = $this->actingAs($admin)->from(route('admin.users.index'))->delete(
+            route('admin.users.destroy', $admin),
+        );
+
+        $responseUnico->assertSessionHasErrors('user');
+        $this->assertNotNull($admin->fresh());
+    }
+
+    public function test_editor_nao_pode_excluir_usuario(): void
+    {
+        $editor = User::factory()->create();
+        $editor->assignRole('editor');
+        $alvo = User::factory()->create();
+        $alvo->assignRole('editor');
+
+        $response = $this->actingAs($editor)->delete(route('admin.users.destroy', $alvo));
+
+        $response->assertForbidden();
+        $this->assertNotNull($alvo->fresh());
+    }
 }
