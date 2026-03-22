@@ -15,6 +15,14 @@ class ListarLivrosRequest extends FormRequest
 
     protected function prepareForValidation(): void
     {
+        $buscaBruta = $this->query('busca');
+        if ($buscaBruta === null || $buscaBruta === '') {
+            $this->merge(['busca' => null]);
+        } else {
+            $t = trim((string) $buscaBruta);
+            $this->merge(['busca' => $t === '' ? null : $t]);
+        }
+
         $permitidos = config('livros.per_page.options');
         $padrao = (int) config('livros.per_page.default');
         $bruto = $this->query('per_page');
@@ -35,11 +43,19 @@ class ListarLivrosRequest extends FormRequest
     {
         return [
             'per_page' => ['required', 'integer', Rule::in(config('livros.per_page.options'))],
+            'busca' => ['nullable', 'string', 'max:255'],
         ];
     }
 
     public function itensPorPagina(): int
     {
         return (int) $this->validated('per_page');
+    }
+
+    public function termoBusca(): ?string
+    {
+        $v = $this->validated('busca');
+
+        return ($v !== null && $v !== '') ? $v : null;
     }
 }
