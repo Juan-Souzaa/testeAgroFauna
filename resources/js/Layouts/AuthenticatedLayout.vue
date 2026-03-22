@@ -26,7 +26,7 @@ watch(
     >
         <Sidebar v-model:aberto="sidebarAberto" />
 
-        <div class="flex min-h-screen min-w-0 flex-1 flex-col">
+        <div class="flex min-h-screen min-w-0 flex-1 flex-col lg:pl-64">
             <header
                 class="sticky top-0 z-30 flex h-16 w-full shrink-0 items-center justify-between gap-4 border-b border-slate-200/60 bg-folio-surface px-4 sm:px-6 lg:px-8"
             >

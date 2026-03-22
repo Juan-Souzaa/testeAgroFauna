@@ -40,7 +40,7 @@ function fechar() {
 
     <aside
         :class="[
-            'fixed inset-y-0 left-0 z-50 flex w-64 shrink-0 flex-col gap-y-2 border-r border-slate-200/80 bg-folio-surface-low p-4 transition-transform duration-200 ease-out lg:static lg:translate-x-0',
+            'fixed inset-y-0 left-0 z-50 flex h-screen w-64 shrink-0 flex-col gap-y-2 overflow-hidden border-r border-slate-200/80 bg-folio-surface-low p-4 transition-transform duration-200 ease-out lg:translate-x-0',
             aberto ? 'translate-x-0' : '-translate-x-full lg:translate-x-0',
         ]"
     >
@@ -60,7 +60,7 @@ function fechar() {
             </p>
         </div>
 
-        <nav class="flex grow flex-col gap-y-1">
+        <nav class="flex min-h-0 flex-1 flex-col gap-y-1 overflow-y-auto">
             <Link
                 v-if="podeVerLivros"
                 :href="route('livros.index')"
