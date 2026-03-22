@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\Admin\LogController;
 use App\Http\Controllers\Admin\UserController;
 use App\Http\Controllers\LivroController;
 use App\Http\Controllers\ProfileController;
@@ -37,6 +38,10 @@ Route::middleware('auth')->group(function () {
         Route::post('/admin/usuarios', [UserController::class, 'store'])->name('admin.users.store');
         Route::patch('/admin/usuarios/{user}/papel', [UserController::class, 'updateRole'])->name('admin.users.role');
         Route::delete('/admin/usuarios/{user}', [UserController::class, 'destroy'])->name('admin.users.destroy');
+    });
+
+    Route::middleware('permission:logs.view')->group(function () {
+        Route::get('/admin/logs', [LogController::class, 'index'])->name('admin.logs.index');
     });
 });
 

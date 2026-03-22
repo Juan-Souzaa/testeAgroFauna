@@ -5,7 +5,9 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Admin\StoreUserRequest;
 use App\Http\Requests\Admin\UpdateUserRoleRequest;
+use App\Models\AuditLog;
 use App\Models\User;
+use App\Services\AuditLogService;
 use App\Services\UserService;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Validation\ValidationException;
@@ -25,14 +27,21 @@ class UserController extends Controller
         ]);
     }
 
-    public function store(StoreUserRequest $request, UserService $usuarios): RedirectResponse
+    public function store(StoreUserRequest $request, UserService $usuarios, AuditLogService $auditLog): RedirectResponse
     {
         $dados = $request->validated();
 
-        $usuarios->criarEditor(
+        $novo = $usuarios->criarEditor(
             $dados['name'],
             $dados['email'],
             $dados['password'],
+        );
+
+        $auditLog->registrar(
+            $request->user(),
+            AuditLog::USUARIO_CREATED,
+            $novo,
+            $novo->name.' · '.$novo->email,
         );
 
         return redirect()
@@ -40,9 +49,10 @@ class UserController extends Controller
             ->with('success', 'Usuário criado como editor. Ele já pode entrar com o e-mail e a senha definidos.');
     }
 
-    public function updateRole(UpdateUserRoleRequest $request, User $user, UserService $usuarios): RedirectResponse
+    public function updateRole(UpdateUserRoleRequest $request, User $user, UserService $usuarios, AuditLogService $auditLog): RedirectResponse
     {
         $novoPapel = $request->validated('role');
+        $papelAnterior = $user->roles->first()?->name;
 
         try {
             $usuarios->alterarPapel($user, $novoPapel, $request->user());
@@ -50,18 +60,42 @@ class UserController extends Controller
             return redirect()->back()->withErrors($e->errors());
         }
 
+        $atualizado = $user->fresh();
+
+        $auditLog->registrar(
+            $request->user(),
+            AuditLog::USUARIO_ROLE_CHANGED,
+            $atualizado,
+            $atualizado->name.' · '.$atualizado->email,
+            [
+                'de' => $papelAnterior,
+                'para' => $novoPapel,
+            ],
+        );
+
         return redirect()
             ->back()
             ->with('success', 'Papel do usuário atualizado.');
     }
 
-    public function destroy(User $user, UserService $usuarios): RedirectResponse
+    public function destroy(User $user, UserService $usuarios, AuditLogService $auditLog): RedirectResponse
     {
+        $descricaoAlvo = $user->name.' · '.$user->email;
+        $idAlvo = $user->id;
+
         try {
             $usuarios->excluir($user, request()->user());
         } catch (ValidationException $e) {
             return redirect()->back()->withErrors($e->errors());
         }
+
+        $auditLog->registrar(
+            request()->user(),
+            AuditLog::USUARIO_DELETED,
+            null,
+            $descricaoAlvo,
+            ['usuario_id' => $idAlvo],
+        );
 
         return redirect()
             ->back()
