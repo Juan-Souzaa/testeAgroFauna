@@ -246,7 +246,7 @@ const submit = () => {
                             class="mt-10 flex flex-col-reverse gap-3 border-t border-folio-outline-variant/10 pt-8 sm:flex-row sm:justify-end"
                         >
                             <Link
-                                :href="route('dashboard')"
+                                :href="route('livros.index')"
                                 class="inline-flex items-center justify-center rounded-xl border border-folio-outline-variant/30 bg-folio-surface-low px-6 py-3.5 text-center font-headline text-sm font-bold text-folio-on-surface transition-colors hover:bg-folio-surface-high"
                             >
                                 Cancelar
