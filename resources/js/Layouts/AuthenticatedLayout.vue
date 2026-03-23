@@ -1,4 +1,5 @@
 <script setup>
+import FlashMessage from '@/Components/FlashMessage.vue';
 import Sidebar from '@/Components/Sidebar.vue';
 import Dropdown from '@/Components/Dropdown.vue';
 import DropdownLink from '@/Components/DropdownLink.vue';
@@ -109,6 +110,7 @@ watch(
             </div>
 
             <main class="flex-1">
+                <FlashMessage />
                 <slot />
             </main>
         </div>

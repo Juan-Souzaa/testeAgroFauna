@@ -19,10 +19,10 @@ const podeVerLogs = computed(() =>
 );
 
 const linkSidebar = (ativo) => [
-    'flex items-center gap-3 rounded-lg px-4 py-3 text-sm font-headline transition-all duration-200 select-none',
+    'flex min-w-0 items-center gap-3 rounded-lg px-4 py-3 text-sm font-headline transition-colors duration-200 select-none',
     ativo
         ? 'bg-white font-bold text-folio-primary-container shadow-sm'
-        : 'cursor-pointer text-slate-600 hover:translate-x-1 hover:bg-slate-200',
+        : 'cursor-pointer text-slate-600 hover:bg-slate-200',
 ];
 
 function fechar() {
@@ -40,7 +40,7 @@ function fechar() {
 
     <aside
         :class="[
-            'fixed inset-y-0 left-0 z-50 flex h-screen w-64 shrink-0 flex-col gap-y-2 overflow-hidden border-r border-slate-200/80 bg-folio-surface-low p-4 transition-transform duration-200 ease-out lg:translate-x-0',
+            'fixed inset-y-0 left-0 z-50 flex h-screen w-64 min-w-0 shrink-0 flex-col gap-y-2 overflow-x-hidden overflow-y-hidden border-r border-slate-200/80 bg-folio-surface-low p-4 transition-transform duration-200 ease-out lg:translate-x-0',
             aberto ? 'translate-x-0' : '-translate-x-full lg:translate-x-0',
         ]"
     >
@@ -60,7 +60,9 @@ function fechar() {
             </p>
         </div>
 
-        <nav class="flex min-h-0 flex-1 flex-col gap-y-1 overflow-y-auto">
+        <nav
+            class="flex min-h-0 min-w-0 flex-1 flex-col gap-y-1 overflow-y-auto overflow-x-hidden"
+        >
             <Link
                 v-if="podeVerLivros"
                 :href="route('livros.index')"
@@ -71,10 +73,10 @@ function fechar() {
                 "
                 @click="fechar"
             >
-                <span class="material-symbols-outlined text-[22px]">
+                <span class="material-symbols-outlined shrink-0 text-[22px]">
                     menu_book
                 </span>
-                Livros
+                <span class="min-w-0 truncate">Livros</span>
             </Link>
 
             <Link
@@ -87,10 +89,10 @@ function fechar() {
                 "
                 @click="fechar"
             >
-                <span class="material-symbols-outlined text-[22px]">
+                <span class="material-symbols-outlined shrink-0 text-[22px]">
                     group
                 </span>
-                Usuários
+                <span class="min-w-0 truncate">Usuários</span>
             </Link>
 
             <Link
@@ -103,21 +105,23 @@ function fechar() {
                 "
                 @click="fechar"
             >
-                <span class="material-symbols-outlined text-[22px]">
+                <span class="material-symbols-outlined shrink-0 text-[22px]">
                     history
                 </span>
-                Atividades
+                <span class="min-w-0 truncate">Atividades</span>
             </Link>
         </nav>
 
-        <div class="mt-auto flex flex-col gap-y-1">
+        <div class="mt-auto flex min-w-0 flex-col gap-y-1 overflow-x-hidden">
             <Link
                 :href="route('profile.edit')"
                 :class="linkSidebar(false)"
                 @click="fechar"
             >
-                <span class="material-symbols-outlined text-[22px]">person</span>
-                Perfil
+                <span class="material-symbols-outlined shrink-0 text-[22px]"
+                    >person</span
+                >
+                <span class="min-w-0 truncate">Perfil</span>
             </Link>
             <Link
                 :href="route('logout')"
@@ -126,8 +130,10 @@ function fechar() {
                 :class="linkSidebar(false)"
                 @click="fechar"
             >
-                <span class="material-symbols-outlined text-[22px]">logout</span>
-                Sair
+                <span class="material-symbols-outlined shrink-0 text-[22px]"
+                    >logout</span
+                >
+                <span class="min-w-0 truncate">Sair</span>
             </Link>
         </div>
     </aside>

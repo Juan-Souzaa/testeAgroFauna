@@ -120,13 +120,6 @@ const intervaloLista = computed(() => {
         <div
             class="mx-auto max-w-7xl px-4 pb-12 pt-6 sm:px-6 lg:px-12 lg:pt-8"
         >
-            <div
-                v-if="$page.props.flash?.success"
-                class="mb-6 rounded-xl border border-emerald-200 bg-emerald-50 px-4 py-3 text-sm font-medium text-emerald-800"
-            >
-                {{ $page.props.flash.success }}
-            </div>
-
             <div v-if="$page.props.errors?.role" class="mb-6 rounded-xl border border-red-200 bg-red-50 px-4 py-3 text-sm font-medium text-red-800">
                 <p class="font-medium text-red-800">
                     {{ $page.props.errors.role }}
